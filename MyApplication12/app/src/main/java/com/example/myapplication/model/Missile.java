@@ -8,8 +8,7 @@ public class Missile {
 
     private ImageView imageView;
 
-
-    private int speed = 40;
+    private final int speed = 100;
     private float r;
 
     private float cur_x;  //현재 위치 x

@@ -2,21 +2,15 @@ package com.example.myapplication.controller;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
-import androidx.core.view.ViewCompat;
 
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Point;
-import android.graphics.drawable.Drawable;
-import android.media.Image;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -99,14 +93,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     @Override
     public void onClick(View v) {
        float degree = cannon.getRotation();
-       float x = cannon.getLeft() + (cannon.getPivotX()/2);
-       float y = cannon.getBottom();
+     /*  float x = cannon.getLeft() + (cannon.getPivotX()/2);*/
+        float x = cannon.getLeft();
+       float y = (float)(cannon.getTop()+ (cannon.getHeight()*0.8));
 
        //create missile imageView
-       ImageView iv = new ImageView(this);
-       iv.setBackgroundColor(Color.BLACK);
-       iv.setLayoutParams(new ConstraintLayout.LayoutParams(50, 50));
-       iv.setImageResource(R.drawable.ic_launcher_foreground);
+        ImageView iv = createMissileImage(this);
        parentView.addView(iv, 0);
 
        iv.setX(x);
@@ -150,6 +142,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
             }
         }
 
+    }
+
+    //missile imageView
+    public ImageView createMissileImage(Context context){
+        int missile_w = cannon.getWidth();
+        int missile_h = cannon.getWidth();
+        ImageView iv = new ImageView(context);
+        iv.setLayoutParams(new ConstraintLayout.LayoutParams(missile_w, missile_h));
+        iv.setImageResource(R.drawable.missile);
+        return iv;
     }
 
     @Override

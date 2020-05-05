@@ -11,7 +11,7 @@
 
     <ImageView
         android:id="@+id/cannon"
-        android:layout_width="20dp"
+        android:layout_width="40dp"
         android:layout_height="100dp"
         app:layout_constraintBottom_toTopOf="@id/guide"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -24,7 +24,7 @@
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/guide"
-        android:layout_width="50dp"
+        android:layout_width="60dp"
         android:layout_height="50dp"
         android:src="@drawable/military"
         android:foreground="@drawable/rounded"/>
