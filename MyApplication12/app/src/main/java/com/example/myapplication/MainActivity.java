@@ -8,6 +8,7 @@ import android.graphics.Point;
 
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -29,20 +30,23 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     //미사일 객체를 담기 위한 arrayList
     private ArrayList<Missile> missileList;
 
-    //화면 넓이, 높이
+    //화면 넓이, 높이, dpi
     private int width;
     private int height;
+    private int dpi;
 
     //스레드 및 핸들러
     private Thread gameThread;
     private Handler handler2 = new Handler();
 
-
     //스레드 작동 여부
     private boolean start;
 
-    //대포알 이동 거리
-    private final int distance = 100;
+    //속력 (초당 500)
+    private final int speed = 500;
+
+    // 스레드 슬립 시간
+    private double sleepTime = 0.05;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,11 +54,12 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         setContentView(R.layout.activity_main);
 
         //화면 해상도 구하기 및 초기화
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-        Point size = new Point();
-        display.getSize(size);
-        width = size.x;
-        height = size.y;
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        width = displayMetrics.widthPixels;
+        height = displayMetrics.heightPixels;
+        dpi = displayMetrics.densityDpi;
+
 
         // 캐논 객체 생성
         cannon = findViewById(R.id.cannon);
@@ -90,10 +95,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     }
 
 
-
-
-
-
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {}
     @Override
@@ -103,8 +104,8 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     //onclick handler
     @Override
     public void onClick(View v) {
-        //대포 각도
-       float degree = cannon.getRotation()+90;
+        //대포 각도 ( 180 ~ 0 )
+       float degree = 180-(cannon.getRotation()+90);
        float radiuns = (float)(degree*Math.PI)/180;  // radiuns로 변환
 
        //미사일 생성 위치(x,y)
@@ -117,47 +118,56 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         iv.setX(x);
         iv.setY(y);
 
-        //각도에 따른 x,y축 변화량 계산
-       float variation_x = (float)(distance * Math.cos(radiuns));
-       float variation_y = (float)(distance * Math.sin(radiuns));
+        //위치 계산 (unit_Vector)
+        double unit_x = Math.cos(radiuns);
+        double unit_y = Math.sin(radiuns);
+
+        //x,y축 변화량 계산
+       float vector_x = (float)((speed * unit_x) * sleepTime);
+       float vector_y = (float)((speed * unit_y) * sleepTime);
+
+       //dp로 변환
+        vector_x = vector_x * (dpi/160);
+        vector_y = vector_y * (dpi/160);
 
        //미사일 객체 생성 및 arrayList에 add
-       missileList.add(new Missile(x,y, variation_x, variation_y, iv));
+       missileList.add(new Missile(x,y, vector_x, vector_y, iv));
     }
 
 
 
-    //thread
+    //Runnable
     @Override
     public void run() {
         while(start){
-            // 메인 스레드에 전달
-            handler2.post(new Runnable() {
-                @Override
-                public void run() {
-                    if(missileList.size() >0 ){
-                        for(int i=0; i<missileList.size(); i++){
+            if(missileList.size() >0 ) {
+                // 메인 스레드에 전달
+                handler2.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for (int i = 0; i < missileList.size(); i++) {
+
                             //미사일 이동
                             Missile missile = missileList.get(i);
                             missile.move();
+
                             //화면 벗어나면 삭제
-                            if(missile.getCur_x() <=100 || missile.getCur_x()>=width-100 || missile.getCur_y() <=100){
+                            if (missile.getCur_x() <= 0 || missile.getCur_x() >= width || missile.getCur_y() <= 0) {
                                 parentView.removeView(missile.getImageView());
                                 missileList.remove(i);
                             }
-                        }
-                    }
-                }
-            });
-
+                        } // end for
+                    }  // end run()
+                }); // end post()
+            } // end if
             try {
-                Thread.sleep(100);
+                Thread.sleep((long)(sleepTime*1000));
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
     }
+
 
     //missile imageView
     public ImageView createMissileImage(Context context){
@@ -168,6 +178,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         iv.setImageResource(R.drawable.missile);
         return iv;
     }
+
 
     @Override
     protected void onResume() {

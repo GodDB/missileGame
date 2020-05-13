@@ -11,16 +11,16 @@ public class Missile {
     private float cur_x;  //현재 위치 x
     private float cur_y;  //현재 위치 y
 
-    private float variation_x;  //x축 변화량
-    private float variation_y;  //y축 변화량
+    private float vector_x;  //x축 변화량
+    private float vector_y;  //y축 변화량
 
 
-    public Missile(float x, float y, float variation_x, float variation_y, ImageView imageView){
+    public Missile(float x, float y, float vector_x, float vector_y, ImageView imageView){
         this.cur_x = x;
         this.cur_y = y;
 
-        this.variation_x = variation_x;
-        this.variation_y = variation_y;
+        this.vector_x = vector_x;
+        this.vector_y = vector_y;
 
         this.imageView = imageView;
     }
@@ -28,13 +28,11 @@ public class Missile {
     //이동
     public void move(){
         //이동 계산
-
-        cur_x = cur_x - variation_x;
-        cur_y = cur_y - variation_y ;
+        cur_x = cur_x + vector_x;
+        cur_y = cur_y - vector_y;
 
         imageView.setX(cur_x); //x 이동
         imageView.setY(cur_y); //y 이동
-
     }
 
 
