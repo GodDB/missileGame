@@ -11,8 +11,8 @@ public class Missile {
     private float cur_x;  //현재 위치 x
     private float cur_y;  //현재 위치 y
 
-    private float vector_x;  //x축 변화량
-    private float vector_y;  //y축 변화량
+    private float vector_x;  //x축 변위
+    private float vector_y;  //y축 변위
 
 
     public Missile(float x, float y, float vector_x, float vector_y, ImageView imageView){

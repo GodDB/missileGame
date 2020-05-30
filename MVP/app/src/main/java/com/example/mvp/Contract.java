@@ -5,9 +5,14 @@ import android.widget.ImageView;
 public class Contract {
 
     public interface IView {
+        //대포 각도 계산 값 적용
         void setDegree(float degree);
 
-        void setMissile();
+        //미사일 이미지 이동
+        void moveMissile(Missile missile);
+
+        //부모 뷰에서 미사일 이미지 삭제
+        void removeMissile(Missile missile);
     }
 
 
@@ -17,10 +22,10 @@ public class Contract {
         void setView(IView iv);
 
         //대포 각도 계산
-        float cal_degree(int progress);
+        void cal_degree(int progress);
 
         //x,y축 속도 계산
-        void cal_speed(float degree, int dpi, float x, float y, ImageView iv);
+        void cal_speed(float degree, float x, float y, ImageView iv);
 
         //스레드 start
         void startThread();

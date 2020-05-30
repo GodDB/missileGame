@@ -12,7 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 
-public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener {
+public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBarChangeListener, View.OnClickListener, Contract.IView {
 
     private Contract.IPresenter presenter;
 
@@ -22,24 +22,20 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     private ImageView cannon;
     private ConstraintLayout parentView;
 
-    //화면 넓이, 높이, dpi
-    private int width;
-    private int height;
-    private int dpi;
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //화면 해상도 구하기 및 초기화
+        //화면 가로값, dpi값
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        width = displayMetrics.widthPixels;
-        height = displayMetrics.heightPixels;
-        dpi = displayMetrics.densityDpi;
+        int width = displayMetrics.widthPixels;
+        int dpi = displayMetrics.densityDpi;
+
+        //presenter에 setView
+        presenter = new Presenter(width, dpi);
+        presenter.setView(this);
 
         // 캐논 객체 생성
         cannon = findViewById(R.id.cannon);
@@ -59,8 +55,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     // click event
     @Override
     public void onClick(View v) {
-        //대포 각도 ( 180 ~ 0 )
-        float degree = 180-(cannon.getRotation()+90);
+        float degree = cannon.getRotation();
 
         //미사일 생성 위치(x,y)
         float x = cannon.getLeft();
@@ -72,17 +67,30 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         iv.setX(x);
         iv.setY(y);
 
-        presenter.cal_speed(degree, dpi, x, y, iv);
+        presenter.cal_speed(degree, x, y, iv);
     }
 
     // seekbar event
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        //대포 각도 조절
-        float degree = (float)((progress-50)*1.8);
+        presenter.cal_degree(progress);
+    }
+
+    @Override
+    public void setDegree(float degree) {
         cannon.setPivotX(cannon.getWidth()/2);
         cannon.setPivotY(cannon.getHeight());
         cannon.setRotation(degree);
+    }
+
+    @Override
+    public void moveMissile(Missile missile) {
+        missile.move();
+    }
+
+    @Override
+    public void removeMissile(Missile missile) {
+        parentView.removeView(missile.getImageView());
     }
 
     //missile imageView
@@ -95,10 +103,25 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         return iv;
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //스레드 실행
+        presenter.startThread();
+    }
 
-    // not using
+    @Override
+    protected void onPause() {
+        super.onPause();
+        //스레드 중지
+        presenter.stopThread();
+    }
+
+
+    // not using(seekbarListener handler)
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) { }
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) { }
+
 }
