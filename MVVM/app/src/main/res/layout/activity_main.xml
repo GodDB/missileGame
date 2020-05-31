@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.mvvm.ViewModel" />
+
+        <variable
+            name="activity"
+            type="com.example.mvvm.MainActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/parent_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/background"
+        tools:context=".MainActivity">
+
+        <ImageView
+            android:id="@+id/cannon"
+            android:layout_width="40dp"
+            android:layout_height="100dp"
+            app:layout_constraintBottom_toTopOf="@id/guide"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            android:src="@color/military"
+            android:layout_marginBottom="25dp"
+            android:transformPivotX="20dp"
+            android:transformPivotY="100dp"
+            android:rotation="@{viewModel.degree}"
+            />
+
+        <ImageView
+            android:id="@+id/tire"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/guide"
+            android:layout_width="60dp"
+            android:layout_height="50dp"
+            android:src="@drawable/military"
+            android:foreground="@drawable/rounded" />
+
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guide"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:visibility="visible"
+            app:layout_constraintGuide_percent="0.8" />
+
+        <SeekBar
+            android:id="@+id/seekbar"
+            android:layout_width="200dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="@id/guide"
+            app:layout_constraintRight_toLeftOf="@id/fire"
+            app:layout_constraintHorizontal_chainStyle="packed"
+            android:progress="50"
+            app:layout_constraintBaseline_toBaselineOf="@id/fire"
+            android:background="#ffffff"
+            android:onProgressChanged="@{viewModel::onValueChanged}"
+            />
+
+        <Button
+            android:id="@+id/fire"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/seekbar"
+            app:layout_constraintTop_toBottomOf="@id/guide"
+            app:layout_constraintRight_toRightOf="parent"
+            android:text="@string/fire"
+            android:onClick="@{activity::onClick}"
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
