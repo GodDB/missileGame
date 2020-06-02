@@ -1,7 +1,6 @@
 package com.example.mvvm;
 
-import android.util.Log;
-import android.widget.ImageView;
+import android.view.View;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -10,8 +9,10 @@ import androidx.databinding.Bindable;
 //미사일
 public class Missile extends BaseObservable {
 
-    private float cur_x = 150;  //현재 위치 x
-    private float cur_y = 450;  //현재 위치 y
+    private int visible;
+
+    private float cur_x;  //현재 위치 x
+    private float cur_y;  //현재 위치 y
 
     private float vector_x;  //x축 변위
     private float vector_y;  //y축 변위
@@ -23,20 +24,34 @@ public class Missile extends BaseObservable {
 
         this.vector_x = vector_x;
         this.vector_y = vector_y;
+
+        this.visible = View.VISIBLE;
     }
 
+    public void move(){
+        cur_x = cur_x + vector_x;
+        cur_y = cur_y - vector_y;
+        notifyPropertyChanged(BR.cur_x);
+        notifyPropertyChanged(BR.cur_y);
+    }
+
+    public void remove(){
+        this.visible = View.GONE;
+        notifyPropertyChanged(BR.visible);
+    }
+
+    @Bindable
+    public int getVisible(){
+        return this.visible;
+    }
 
     @Bindable
     public float getCur_x() {
-        Log.d("godgod", "getCur_X");
-        cur_x = cur_x + vector_x;
         return cur_x;
     }
 
     @Bindable
     public float getCur_y() {
-        Log.d("godgod", "getCur_y");
-        cur_y = cur_y - vector_y;
         return cur_y;
     }
 }

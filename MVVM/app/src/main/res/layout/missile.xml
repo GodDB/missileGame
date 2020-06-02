@@ -3,19 +3,18 @@
 
     <data>
         <variable
-            name="viewModel"
-            type="com.example.mvvm.ViewModel" />
-        <variable
             name="missile"
             type="com.example.mvvm.Missile" />
     </data>
 
         <ImageView
             android:id="@+id/missile"
-            android:layout_width="100dp"
-            android:layout_height="100dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:src="@drawable/missile"
             android:translationX="@{missile.cur_x}"
             android:translationY="@{missile.cur_y}"
+            android:visibility="@{missile.visible}"
+
             />
 </layout>

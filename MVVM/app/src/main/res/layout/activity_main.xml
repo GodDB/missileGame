@@ -34,6 +34,8 @@
             android:rotation="@{viewModel.degree}"
             />
 
+
+
         <ImageView
             android:id="@+id/tire"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -42,7 +44,7 @@
             android:layout_width="60dp"
             android:layout_height="50dp"
             android:src="@drawable/military"
-            android:foreground="@drawable/rounded" />
+            android:foreground="@drawable/rounded"/>
 
 
         <androidx.constraintlayout.widget.Guideline
