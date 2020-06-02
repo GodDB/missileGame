@@ -16,11 +16,12 @@
         app:layout_constraintBottom_toTopOf="@id/guide"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:transformPivotX="20dp"
+        android:transformPivotY="100dp"
         android:src="@color/military"
         android:layout_marginBottom="25dp"
         />
     <ImageView
-        android:id="@+id/tire"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/guide"

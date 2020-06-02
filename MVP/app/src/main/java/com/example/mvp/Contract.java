@@ -25,7 +25,7 @@ public class Contract {
         void cal_degree(int progress);
 
         //x,y축 속도 계산
-        void cal_speed(float degree, float x, float y, ImageView iv);
+        void cal_speed(float degree, float x, float y, int id);
 
         //스레드 start
         void startThread();

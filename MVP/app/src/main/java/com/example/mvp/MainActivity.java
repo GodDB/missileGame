@@ -62,12 +62,14 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         float y = (float)(cannon.getTop()+ (cannon.getHeight()*0.8));
 
         //미사일 이미지 생성
-        ImageView iv = createMissileImage(this);
-        parentView.addView(iv, 0);
+        ImageView iv = createMissileImage();
+        parentView.addView(iv);
+        int id = View.generateViewId();
+        iv.setId(id);
         iv.setX(x);
         iv.setY(y);
 
-        presenter.cal_speed(degree, x, y, iv);
+        presenter.cal_speed(degree, x, y, id);
     }
 
     // seekbar event
@@ -78,26 +80,29 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     @Override
     public void setDegree(float degree) {
-        cannon.setPivotX(cannon.getWidth()/2);
-        cannon.setPivotY(cannon.getHeight());
         cannon.setRotation(degree);
     }
 
     @Override
     public void moveMissile(Missile missile) {
-        missile.move();
+        // 미사일 이미지 이동
+        ImageView missile_iv = findViewById(missile.getId());
+        missile_iv.setX(missile.getCur_x());
+        missile_iv.setY(missile.getCur_y());
     }
 
     @Override
     public void removeMissile(Missile missile) {
-        parentView.removeView(missile.getImageView());
+        //미사일 이미지 제거
+        ImageView missile_iv = findViewById(missile.getId());
+        parentView.removeView(missile_iv);
     }
 
     //missile imageView
-    public ImageView createMissileImage(Context context){
+    public ImageView createMissileImage(){
         int missile_w = cannon.getWidth();
         int missile_h = cannon.getWidth();
-        ImageView iv = new ImageView(context);
+        ImageView iv = new ImageView(MainActivity.this);
         iv.setLayoutParams(new ConstraintLayout.LayoutParams(missile_w, missile_h));
         iv.setImageResource(R.drawable.missile);
         return iv;

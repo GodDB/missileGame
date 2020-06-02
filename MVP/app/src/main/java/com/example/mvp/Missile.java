@@ -6,7 +6,7 @@ import android.widget.ImageView;
 //미사일
 public class Missile {
 
-    private ImageView imageView; // 미사일 이미지 객체
+    private int id; //미사일 객체 id값
 
     private float cur_x;  //현재 위치 x
     private float cur_y;  //현재 위치 y
@@ -15,14 +15,14 @@ public class Missile {
     private float vector_y;  //y축 변위
 
 
-    public Missile(float x, float y, float vector_x, float vector_y, ImageView imageView){
+    public Missile(float x, float y, float vector_x, float vector_y, int id){
         this.cur_x = x;
         this.cur_y = y;
 
         this.vector_x = vector_x;
         this.vector_y = vector_y;
 
-        this.imageView = imageView;
+        this.id = id;
     }
 
     //이동
@@ -31,13 +31,10 @@ public class Missile {
         cur_x = cur_x + vector_x;
         cur_y = cur_y - vector_y;
 
-        imageView.setX(cur_x); //x 이동
-        imageView.setY(cur_y); //y 이동
+
     }
 
-    public ImageView getImageView() {
-        return imageView;
-    }
+    public int getId(){return id;}
 
     public float getCur_x() {
         return cur_x;

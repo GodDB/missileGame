@@ -78,5 +78,7 @@
             android:onClick="@{activity::onClick}"
             />
 
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

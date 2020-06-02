@@ -49,7 +49,7 @@ public class Presenter implements Contract.IPresenter, Runnable {
     }
 
     @Override
-    public void cal_speed(float degree, float x, float y, ImageView iv) {
+    public void cal_speed(float degree, float x, float y, int id) {
 
         //대포 각도 ( 180 ~ 0 )
         degree = 180-(degree+90);
@@ -68,7 +68,7 @@ public class Presenter implements Contract.IPresenter, Runnable {
         vector_x = vector_x * (dpi/160);
         vector_y = vector_y * (dpi/160);
 
-        missileList.add(new Missile(x, y, vector_x, vector_y, iv));
+        missileList.add(new Missile(x, y, vector_x, vector_y, id));
     }
 
     @Override
@@ -83,6 +83,8 @@ public class Presenter implements Contract.IPresenter, Runnable {
 
                             //미사일 이동
                             Missile missile = missileList.get(i);
+                            //미사일 속도 반영
+                            missile.move();
                             view.moveMissile(missile);
 
                             //화면에 벗어나면 삭제
