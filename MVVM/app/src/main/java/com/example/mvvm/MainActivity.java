@@ -33,20 +33,13 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.setActivity(this);
     }
 
-    //화면이 다 그려졌을 때 호출
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-
-        float x = (float) activityMainBinding.cannon.getLeft();
-        float y = (float)((activityMainBinding.cannon.getTop()) + (activityMainBinding.cannon.getHeight()*0.8));
-        mainViewModel.setXY(x, y);
-    }
-
 
     // 버튼 클릭
     public void onClick(View v){
         MissileBinding missileBinding =DataBindingUtil.inflate(getLayoutInflater(), R.layout.missile, activityMainBinding.parentView, true);
+
+        float x = (float) activityMainBinding.cannon.getLeft();
+        float y = (float)((activityMainBinding.cannon.getTop()) + (activityMainBinding.cannon.getHeight()*0.8));
 
        //missileBinding객체에 알림이 왔을 때 호출되는 리스너를 구현하여 missileBinding객체에 add
         missileBinding.addOnRebindCallback(new OnRebindCallback() {
@@ -60,7 +53,11 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
-        mainViewModel.bindMissile(missileBinding);
+
+        Missile missile = new Missile(x, y);
+        missileBinding.setMissile(missile);
+
+        mainViewModel.cal_speed(missile);
     }
 
 

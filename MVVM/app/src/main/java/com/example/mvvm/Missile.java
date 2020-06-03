@@ -1,5 +1,7 @@
 package com.example.mvvm;
 
+import android.util.Log;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
@@ -14,12 +16,10 @@ public class Missile extends BaseObservable {
     private float vector_y;  //y축 변위
 
 
-    public Missile(float x, float y, float vector_x, float vector_y){
+    public Missile(float x, float y){
         this.cur_x = x;
         this.cur_y = y;
 
-        this.vector_x = vector_x;
-        this.vector_y = vector_y;
     }
 
     public void move(){
@@ -29,6 +29,13 @@ public class Missile extends BaseObservable {
         notifyPropertyChanged(BR.cur_y);
     }
 
+    public void setVector_x(float vector_x) {
+        this.vector_x = vector_x;
+    }
+
+    public void setVector_y(float vector_y) {
+        this.vector_y = vector_y;
+    }
 
     @Bindable
     public float getCur_x() {

@@ -41,13 +41,6 @@ public class MainViewModel extends BaseObservable implements Runnable{
         this.dpi = dpi;
     }
 
-    // 미사일 최초 생성 위치
-    public void setXY(float x, float y){
-        this.missile_x = x;
-        this.missile_y = y;
-    }
-
-
     //대포 각도 계산
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         float degree = (float)((progress-50)*1.8);
@@ -55,15 +48,31 @@ public class MainViewModel extends BaseObservable implements Runnable{
         notifyPropertyChanged(BR.degree);
     }
 
-    //미사일xml과 미사일 객체 바인딩
-    public void bindMissile(MissileBinding missileBinding){
-        float[] vector_arr = cal_speed();
+    //속력에 따른 x,y 변위 계산
+    public void cal_speed(Missile missile){
 
-        // 미사일 객체 생성 및 미사일 xml과 바인딩
-        Missile missile = new Missile(missile_x, missile_y, vector_arr[0], vector_arr[1]);
-        missileBinding.setMissile(missile);
+        float new_degree = 180-(degree+90); //대포 각도 ( 180 ~ 0 )
+        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
+
+        //위치 계산 (unit_Vector)
+        double unit_x = Math.cos(radian);
+        double unit_y = Math.sin(radian);
+
+        //x,y축 변위 계산
+        float vector_x = (float)((speed * unit_x)*sleepTime);
+        float vector_y = (float)((speed * unit_y)*sleepTime);
+
+        //dp로 변환
+        vector_x = vector_x * (dpi/160);
+        vector_y = vector_y * (dpi/160);
+
+        missile.setVector_x(vector_x);
+        missile.setVector_y(vector_y);
         missile_list.add(missile);
     }
+
+
+
 
     @Bindable
     public float getDegree() {
@@ -94,30 +103,6 @@ public class MainViewModel extends BaseObservable implements Runnable{
         }// end while
     }// end run()
 
-    //속력에 따른 x,y 변위 계산
-    private float[] cal_speed(){
-
-        float new_degree = 180-(degree+90); //대포 각도 ( 180 ~ 0 )
-        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
-
-        //위치 계산 (unit_Vector)
-        double unit_x = Math.cos(radian);
-        double unit_y = Math.sin(radian);
-
-        //x,y축 변위 계산
-        float vector_x = (float)((speed * unit_x)*sleepTime);
-        float vector_y = (float)((speed * unit_y)*sleepTime);
-
-        //dp로 변환
-        vector_x = vector_x * (dpi/160);
-        vector_y = vector_y * (dpi/160);
-
-        float[] vector_arr = new float[2];
-        vector_arr[0]=vector_x;
-        vector_arr[1]=vector_y;
-
-        return vector_arr;
-    }
 
     public void startThread() {
         Log.d("godgod", "스레드 실행");
