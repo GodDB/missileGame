@@ -1,6 +1,5 @@
 package com.example.mvp;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -34,10 +33,10 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         int dpi = displayMetrics.densityDpi;
 
         //presenter에 setView
-        presenter = new Presenter(width, dpi);
+        presenter = new MainPresenter(width, dpi);
         presenter.setView(this);
 
-        // 캐논 객체 생성
+        // 캐논이미지 객체 생성
         cannon = findViewById(R.id.cannon);
 
         // 레이아웃 객체 생성
@@ -52,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         button.setOnClickListener(this);
     }
 
-    // click event
+    // onClick Handler
     @Override
     public void onClick(View v) {
         float degree = cannon.getRotation();
@@ -63,26 +62,28 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
         //미사일 이미지 생성
         ImageView iv = createMissileImage();
-        parentView.addView(iv);
         int id = View.generateViewId();
         iv.setId(id);
         iv.setX(x);
         iv.setY(y);
+        parentView.addView(iv);
 
         presenter.cal_speed(degree, x, y, id);
     }
 
-    // seekbar event
+    // seekbar Handler
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         presenter.cal_degree(progress);
     }
 
+    //대포 각도 계산 값 적용
     @Override
     public void setDegree(float degree) {
         cannon.setRotation(degree);
     }
 
+    //미사일 이미지 이동
     @Override
     public void moveMissile(Missile missile) {
         // 미사일 이미지 이동
@@ -91,15 +92,15 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         missile_iv.setY(missile.getCur_y());
     }
 
+    //부모 뷰에서 미사일 이미지 삭제
     @Override
     public void removeMissile(Missile missile) {
-        //미사일 이미지 제거
         ImageView missile_iv = findViewById(missile.getId());
         parentView.removeView(missile_iv);
     }
 
-    //missile imageView
-    public ImageView createMissileImage(){
+    //미사일 이미지뷰 생성
+    private ImageView createMissileImage(){
         int missile_w = cannon.getWidth();
         int missile_h = cannon.getWidth();
         ImageView iv = new ImageView(MainActivity.this);

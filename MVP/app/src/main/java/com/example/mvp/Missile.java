@@ -1,7 +1,5 @@
 package com.example.mvp;
 
-import android.widget.ImageView;
-
 
 //미사일
 public class Missile {
@@ -27,11 +25,9 @@ public class Missile {
 
     //이동
     public void move(){
-        //이동 계산
+        //기존 x,y + x,y 변위
         cur_x = cur_x + vector_x;
         cur_y = cur_y - vector_y;
-
-
     }
 
     public int getId(){return id;}

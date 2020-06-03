@@ -1,21 +1,14 @@
 package com.example.mvvm;
 
-
 import android.util.Log;
 import android.widget.SeekBar;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.Observable;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleObserver;
-import androidx.lifecycle.OnLifecycleEvent;
-
 import com.example.mvvm.databinding.MissileBinding;
 import java.util.ArrayList;
 
 
-
-public class ViewModel extends BaseObservable implements Runnable{
+public class MainViewModel extends BaseObservable implements Runnable{
 
     //화면 넓이, dpi
     private int width;
@@ -43,7 +36,7 @@ public class ViewModel extends BaseObservable implements Runnable{
     //포탄 객체
     ArrayList<Missile> missile_list = new ArrayList();
 
-    ViewModel(int width, int dpi){
+    MainViewModel(int width, int dpi){
         this.width = width;
         this.dpi = dpi;
     }
@@ -56,36 +49,21 @@ public class ViewModel extends BaseObservable implements Runnable{
 
 
     //대포 각도 계산
-    public void onValueChanged(SeekBar seekBar, int progress, boolean fromUser) {
+    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         float degree = (float)((progress-50)*1.8);
         this.degree = degree;
         notifyPropertyChanged(BR.degree);
     }
 
+    //미사일xml과 미사일 객체 바인딩
+    public void bindMissile(MissileBinding missileBinding){
+        float[] vector_arr = cal_speed();
 
-    public void cal_speed(final MissileBinding missileBinding){
-
-        float new_degree = 180-(degree+90); // 180 ~ 0
-        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
-
-        //위치 계산 (unit_Vector)
-        double unit_x = Math.cos(radian);
-        double unit_y = Math.sin(radian);
-
-        //x,y축 변위 계산
-        float vector_x = (float)((speed * unit_x)*sleepTime);
-        float vector_y = (float)((speed * unit_y)*sleepTime);
-
-        //dp로 변환
-        vector_x = vector_x * (dpi/160);
-        vector_y = vector_y * (dpi/160);
-
-        // 미사일 객체 생성 및 미사일 xml와 바인딩
-        Missile missile = new Missile(missile_x, missile_y, vector_x, vector_y);
-        missile_list.add(missile);
+        // 미사일 객체 생성 및 미사일 xml과 바인딩
+        Missile missile = new Missile(missile_x, missile_y, vector_arr[0], vector_arr[1]);
         missileBinding.setMissile(missile);
+        missile_list.add(missile);
     }
-
 
     @Bindable
     public float getDegree() {
@@ -102,14 +80,12 @@ public class ViewModel extends BaseObservable implements Runnable{
                     //미사일 이동
                     missile.move();
 
-                    //화면에 벗어날 시 미사일 제거
-                    if(missile.getCur_x()<=0 || missile.getCur_x()>=width-100 || missile.getCur_y()<=0 ){
-                        missile.remove();
+                    //화면에 벗어날 시 미사일 객체 제거
+                    if(missile.getCur_x()<=0 || missile.getCur_x()>=width || missile.getCur_y()<=0 ){
                         missile_list.remove(missile);
                     }
                 }// end for
             }// end if
-
             try {
                 Thread.sleep((long)(sleepTime*1000));
             } catch (InterruptedException e) {
@@ -117,6 +93,31 @@ public class ViewModel extends BaseObservable implements Runnable{
             }
         }// end while
     }// end run()
+
+    //속력에 따른 x,y 변위 계산
+    private float[] cal_speed(){
+
+        float new_degree = 180-(degree+90); //대포 각도 ( 180 ~ 0 )
+        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
+
+        //위치 계산 (unit_Vector)
+        double unit_x = Math.cos(radian);
+        double unit_y = Math.sin(radian);
+
+        //x,y축 변위 계산
+        float vector_x = (float)((speed * unit_x)*sleepTime);
+        float vector_y = (float)((speed * unit_y)*sleepTime);
+
+        //dp로 변환
+        vector_x = vector_x * (dpi/160);
+        vector_y = vector_y * (dpi/160);
+
+        float[] vector_arr = new float[2];
+        vector_arr[0]=vector_x;
+        vector_arr[1]=vector_y;
+
+        return vector_arr;
+    }
 
     public void startThread() {
         Log.d("godgod", "스레드 실행");

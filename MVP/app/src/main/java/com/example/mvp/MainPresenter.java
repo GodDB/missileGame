@@ -2,16 +2,12 @@ package com.example.mvp;
 
 import android.os.Handler;
 import android.util.Log;
-import android.widget.ImageView;
-
 import java.util.ArrayList;
 
-public class Presenter implements Contract.IPresenter, Runnable {
+public class MainPresenter implements Contract.IPresenter, Runnable {
 
+    //view
     private Contract.IView view;
-
-    //미사일 객체를 담기 위한 arrayList
-    private ArrayList<Missile> missileList = new ArrayList();
 
     //화면 가로, dpi값
     private int dpi;
@@ -30,7 +26,11 @@ public class Presenter implements Contract.IPresenter, Runnable {
     // 스레드 슬립 시간
     private double sleepTime = 0.05;
 
-    Presenter(int width, int dpi){
+    //미사일 객체를 담기 위한 arrayList
+    private ArrayList<Missile> missileList = new ArrayList();
+
+    //생성자
+    MainPresenter(int width, int dpi){
         this.width = width;
         this.dpi = dpi;
     }
@@ -60,7 +60,7 @@ public class Presenter implements Contract.IPresenter, Runnable {
         double unit_x = Math.cos(radian);
         double unit_y = Math.sin(radian);
 
-        //x,y축 속도 계산
+        //x,y축 변위 계산
         float vector_x = (float)((speed * unit_x) * sleepTime);
         float vector_y = (float)((speed * unit_y) * sleepTime);
 
@@ -68,6 +68,7 @@ public class Presenter implements Contract.IPresenter, Runnable {
         vector_x = vector_x * (dpi/160);
         vector_y = vector_y * (dpi/160);
 
+        //미사일 객체 생성 및 리스트에 add
         missileList.add(new Missile(x, y, vector_x, vector_y, id));
     }
 
@@ -81,10 +82,10 @@ public class Presenter implements Contract.IPresenter, Runnable {
                     public void run() {
                         for(int i=0; i< missileList.size(); i++){
 
-                            //미사일 이동
                             Missile missile = missileList.get(i);
-                            //미사일 속도 반영
+                            //미사일 객체 x,y변경
                             missile.move();
+                            //view에서 미사일 이미지 이동
                             view.moveMissile(missile);
 
                             //화면에 벗어나면 삭제

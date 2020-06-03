@@ -1,15 +1,11 @@
 package com.example.mvvm;
 
-import android.view.View;
-
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
 
 
 //미사일
 public class Missile extends BaseObservable {
-
-    private int visible;
 
     private float cur_x;  //현재 위치 x
     private float cur_y;  //현재 위치 y
@@ -24,8 +20,6 @@ public class Missile extends BaseObservable {
 
         this.vector_x = vector_x;
         this.vector_y = vector_y;
-
-        this.visible = View.VISIBLE;
     }
 
     public void move(){
@@ -35,15 +29,6 @@ public class Missile extends BaseObservable {
         notifyPropertyChanged(BR.cur_y);
     }
 
-    public void remove(){
-        this.visible = View.GONE;
-        notifyPropertyChanged(BR.visible);
-    }
-
-    @Bindable
-    public int getVisible(){
-        return this.visible;
-    }
 
     @Bindable
     public float getCur_x() {
