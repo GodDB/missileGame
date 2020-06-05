@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
     //미사일 이미지 이동
     @Override
     public void moveMissile(Missile missile) {
-        // 미사일 이미지 이동
         ImageView missile_iv = findViewById(missile.getId());
         missile_iv.setX(missile.getCur_x());
         missile_iv.setY(missile.getCur_y());
@@ -99,15 +98,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         parentView.removeView(missile_iv);
     }
 
-    //미사일 이미지뷰 생성
-    private ImageView createMissileImage(){
-        int missile_w = cannon.getWidth();
-        int missile_h = cannon.getWidth();
-        ImageView iv = new ImageView(MainActivity.this);
-        iv.setLayoutParams(new ConstraintLayout.LayoutParams(missile_w, missile_h));
-        iv.setImageResource(R.drawable.missile);
-        return iv;
-    }
 
     @Override
     protected void onResume() {
@@ -121,6 +111,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         super.onPause();
         //스레드 중지
         presenter.stopThread();
+    }
+
+    //미사일 이미지뷰 생성
+    private ImageView createMissileImage(){
+        int missile_w = cannon.getWidth();
+        int missile_h = cannon.getWidth();
+        ImageView iv = new ImageView(MainActivity.this);
+        iv.setLayoutParams(new ConstraintLayout.LayoutParams(missile_w, missile_h));
+        iv.setImageResource(R.drawable.missile);
+        return iv;
     }
 
 

@@ -6,6 +6,7 @@ import androidx.databinding.OnRebindCallback;
 import androidx.databinding.ViewDataBinding;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import com.example.mvvm.databinding.ActivityMainBinding;
 import com.example.mvvm.databinding.MissileBinding;
@@ -33,13 +34,22 @@ public class MainActivity extends AppCompatActivity {
         activityMainBinding.setActivity(this);
     }
 
+    //화면이 다 그려졌을 때 호출됨
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+
+        //미사일 최초 생성 위치 x,y
+        float missile_x = (float) activityMainBinding.cannon.getLeft();
+        float missile_y = (float)((activityMainBinding.cannon.getTop()) + (activityMainBinding.cannon.getHeight()*0.8));
+
+        mainViewModel.setXY(missile_x, missile_y);
+    }
 
     // 버튼 클릭
     public void onClick(View v){
-        MissileBinding missileBinding =DataBindingUtil.inflate(getLayoutInflater(), R.layout.missile, activityMainBinding.parentView, true);
-
-        float x = (float) activityMainBinding.cannon.getLeft();
-        float y = (float)((activityMainBinding.cannon.getTop()) + (activityMainBinding.cannon.getHeight()*0.8));
+        //미사일 xml inflate 및 미사일 바인딩 객체 생성
+        final MissileBinding missileBinding =DataBindingUtil.inflate(getLayoutInflater(), R.layout.missile, activityMainBinding.parentView, true);
 
        //missileBinding객체에 알림이 왔을 때 호출되는 리스너를 구현하여 missileBinding객체에 add
         missileBinding.addOnRebindCallback(new OnRebindCallback() {
@@ -54,11 +64,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        Missile missile = new Missile(x, y);
-        missileBinding.setMissile(missile);
-
-        mainViewModel.cal_speed(missile);
+        //missileBinding, missile객체 일대일 바인딩
+        mainViewModel.bindMissile(missileBinding);
     }
+
 
 
 

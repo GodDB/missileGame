@@ -2,7 +2,9 @@ package com.example.mvp;
 
 
 public class Contract {
-
+    // 사용자가 seekbar 움직임 -> 액티비티 전달 -> 프레젠터(cal_degree) -> 액티비티 setDegree
+    // 사용자가 발사 버튼을 누름 -> 액티비티 전달 -> 프레젠터(cal_speed) -> 미사일 객체 생성
+    //
     public interface IView {
         //대포 각도 변경 적용
         void setDegree(float degree);

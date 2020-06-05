@@ -4,7 +4,11 @@ import android.util.Log;
 import android.widget.SeekBar;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.DataBindingUtil;
+
 import com.example.mvvm.databinding.MissileBinding;
+import com.example.mvvm.databinding.MissileBindingImpl;
+
 import java.util.ArrayList;
 
 
@@ -14,15 +18,15 @@ public class MainViewModel extends BaseObservable implements Runnable{
     private int width;
     private int dpi;
 
-    //미사일 생성 위치
+    //미사일 최초 생성 지점
     private float missile_x;
     private float missile_y;
 
-    //속력 (초당 500)
-    private final int speed = 500;
-
     //대포 각도
     private float degree =0;
+
+    //속력 (초당 500)
+    private final int speed = 500;
 
     // 스레드 슬립 시간
     private double sleepTime = 0.05;
@@ -31,15 +35,23 @@ public class MainViewModel extends BaseObservable implements Runnable{
     private boolean start = true;
 
     //thread
-    Thread gameThread = new Thread(this);
+    private Thread gameThread = new Thread(this);
 
     //포탄 객체
-    ArrayList<Missile> missile_list = new ArrayList();
+    private final ArrayList<Missile> missile_list = new ArrayList();
 
+    //생성자
     MainViewModel(int width, int dpi){
         this.width = width;
         this.dpi = dpi;
     }
+
+    //미사일 최초 생성위치 set
+    public void setXY(float x, float y){
+        this.missile_x = x;
+        this.missile_y = y;
+    }
+
 
     //대포 각도 계산
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -48,31 +60,19 @@ public class MainViewModel extends BaseObservable implements Runnable{
         notifyPropertyChanged(BR.degree);
     }
 
-    //속력에 따른 x,y 변위 계산
-    public void cal_speed(Missile missile){
+    // 미사일 바인딩 객체에 미사일 객체 set
+    public void bindMissile(MissileBinding missileBinding){
+        float[] vector = cal_speed(); // x,y변위
 
-        float new_degree = 180-(degree+90); //대포 각도 ( 180 ~ 0 )
-        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
+        //미사일 객체 생성
+        Missile missile = new Missile(missile_x, missile_y, vector[0], vector[1]);
 
-        //위치 계산 (unit_Vector)
-        double unit_x = Math.cos(radian);
-        double unit_y = Math.sin(radian);
+        //미사일 바인딩 객체에 set
+        missileBinding.setMissile(missile);
 
-        //x,y축 변위 계산
-        float vector_x = (float)((speed * unit_x)*sleepTime);
-        float vector_y = (float)((speed * unit_y)*sleepTime);
-
-        //dp로 변환
-        vector_x = vector_x * (dpi/160);
-        vector_y = vector_y * (dpi/160);
-
-        missile.setVector_x(vector_x);
-        missile.setVector_y(vector_y);
+        //미사일 객체들을 리스트에 관리하기 위해 add
         missile_list.add(missile);
     }
-
-
-
 
     @Bindable
     public float getDegree() {
@@ -86,7 +86,7 @@ public class MainViewModel extends BaseObservable implements Runnable{
             if(missile_list.size()>0){
                 for(int i=0; i<missile_list.size(); i++){
                     Missile missile = missile_list.get(i);
-                    //미사일 이동
+                    //미사일 위치 갱신 및 알림
                     missile.move();
 
                     //화면에 벗어날 시 미사일 객체 제거
@@ -104,6 +104,7 @@ public class MainViewModel extends BaseObservable implements Runnable{
     }// end run()
 
 
+
     public void startThread() {
         Log.d("godgod", "스레드 실행");
         this.start = true;
@@ -116,5 +117,27 @@ public class MainViewModel extends BaseObservable implements Runnable{
     public void stopThread() {
         Log.d("godgod", "스레드 중지");
         this.start = false;
+    }
+
+    public float[] cal_speed(){
+
+        float new_degree = 180-(degree+90); //대포 각도 ( 180 ~ 0 )
+        float radian = (float)(new_degree*Math.PI)/180;  // radian로 변환
+
+        //위치 계산 (unit_Vector)
+        double unit_x = Math.cos(radian);
+        double unit_y = Math.sin(radian);
+
+        //x,y축 변위 계산
+        float vector_x = (float)((speed * unit_x)*sleepTime);
+        float vector_y = (float)((speed * unit_y)*sleepTime);
+
+        float[] vector = new float[2];
+
+        //dp로 변환
+        vector[0] = vector_x * (dpi/160);
+        vector[1] = vector_y * (dpi/160);
+
+        return vector;
     }
 }

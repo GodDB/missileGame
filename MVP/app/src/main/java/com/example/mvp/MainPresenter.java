@@ -35,7 +35,6 @@ public class MainPresenter implements Contract.IPresenter, Runnable {
         this.dpi = dpi;
     }
 
-
     @Override
     public void setView(Contract.IView iv) {
         this.view = iv;
