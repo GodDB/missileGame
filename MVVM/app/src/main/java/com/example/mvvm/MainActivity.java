@@ -1,6 +1,7 @@
 package com.example.mvvm;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.BindingAdapter;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.OnRebindCallback;
 import androidx.databinding.ViewDataBinding;
@@ -8,11 +9,13 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
+
 import com.example.mvvm.databinding.ActivityMainBinding;
 import com.example.mvvm.databinding.MissileBinding;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements DrawMissileCallback {
     private ActivityMainBinding activityMainBinding;
     private MainViewModel mainViewModel;
     private int width;
@@ -29,9 +32,8 @@ public class MainActivity extends AppCompatActivity {
         int dpi = displayMetrics.densityDpi;
 
         // 뷰모델 생성 및 메인 xml과 바인딩
-        mainViewModel = new MainViewModel(width, dpi);
+        mainViewModel = new MainViewModel(width, dpi, this);
         activityMainBinding.setMainViewModel(mainViewModel);
-        activityMainBinding.setActivity(this);
     }
 
     //화면이 다 그려졌을 때 호출됨
@@ -46,12 +48,14 @@ public class MainActivity extends AppCompatActivity {
         mainViewModel.setXY(missile_x, missile_y);
     }
 
-    // 버튼 클릭
-    public void onClick(View v){
+    //DrawMissileCallback 구현
+    //뷰모델로 클릭이벤트 전달 시 호출됨
+    @Override
+    public void drawMissile() {
         //미사일 xml inflate 및 미사일 바인딩 객체 생성
         final MissileBinding missileBinding =DataBindingUtil.inflate(getLayoutInflater(), R.layout.missile, activityMainBinding.parentView, true);
 
-       //missileBinding객체에 알림이 왔을 때 호출되는 리스너를 구현하여 missileBinding객체에 add
+        //missileBinding객체에 알림이 왔을 때 호출되는 리스너를 구현하여 missileBinding객체에 add
         missileBinding.addOnRebindCallback(new OnRebindCallback() {
             @Override
             public void onBound(ViewDataBinding binding) {
@@ -70,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -82,4 +85,6 @@ public class MainActivity extends AppCompatActivity {
         super.onPause();
         mainViewModel.stopThread();
     }
+
+
 }

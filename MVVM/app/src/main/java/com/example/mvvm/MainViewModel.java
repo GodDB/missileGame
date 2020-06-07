@@ -1,18 +1,18 @@
 package com.example.mvvm;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.SeekBar;
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
-import androidx.databinding.DataBindingUtil;
-
 import com.example.mvvm.databinding.MissileBinding;
-import com.example.mvvm.databinding.MissileBindingImpl;
-
 import java.util.ArrayList;
 
 
 public class MainViewModel extends BaseObservable implements Runnable{
+
+    //DrawMissileCallback
+    private DrawMissileCallback drawMissileCallback;
 
     //화면 넓이, dpi
     private int width;
@@ -41,9 +41,10 @@ public class MainViewModel extends BaseObservable implements Runnable{
     private final ArrayList<Missile> missile_list = new ArrayList();
 
     //생성자
-    MainViewModel(int width, int dpi){
+    MainViewModel(int width, int dpi, DrawMissileCallback drawMissileCallback){
         this.width = width;
         this.dpi = dpi;
+        this.drawMissileCallback = drawMissileCallback;
     }
 
     //미사일 최초 생성위치 set
@@ -53,11 +54,17 @@ public class MainViewModel extends BaseObservable implements Runnable{
     }
 
 
-    //대포 각도 계산
+    //seekbar이벤트(대포 각도 계산)
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         float degree = (float)((progress-50)*1.8);
         this.degree = degree;
         notifyPropertyChanged(BR.degree);
+    }
+
+    //클릭이벤트
+    public void onClick(View view){
+        //액티비티에서 미사일 이미지 inflate
+        drawMissileCallback.drawMissile();
     }
 
     // 미사일 바인딩 객체에 미사일 객체 set
@@ -118,6 +125,7 @@ public class MainViewModel extends BaseObservable implements Runnable{
         Log.d("godgod", "스레드 중지");
         this.start = false;
     }
+
 
     public float[] cal_speed(){
 

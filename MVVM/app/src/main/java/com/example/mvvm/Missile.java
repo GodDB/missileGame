@@ -1,7 +1,11 @@
 package com.example.mvvm;
 
+import android.util.Log;
+import android.view.View;
+
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
+import androidx.databinding.BindingAdapter;
 
 
 //미사일
@@ -29,6 +33,7 @@ public class Missile extends BaseObservable {
         notifyPropertyChanged(BR.cur_x);
         notifyPropertyChanged(BR.cur_y);
     }
+
 
 
     @Bindable

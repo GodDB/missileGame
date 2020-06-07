@@ -7,10 +7,6 @@
         <variable
             name="mainViewModel"
             type="com.example.mvvm.MainViewModel" />
-
-        <variable
-            name="activity"
-            type="com.example.mvvm.MainActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -73,7 +69,7 @@
             app:layout_constraintTop_toBottomOf="@id/guide"
             app:layout_constraintRight_toRightOf="parent"
             android:text="@string/fire"
-            android:onClick="@{activity::onClick}"
+            android:onClick="@{mainViewModel::onClick}"
             />
 
 
