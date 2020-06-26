@@ -67,9 +67,6 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
         // 레이아웃 객체 생성
         parentView = findViewById(R.id.parent_view);
 
-        // gameThread 생성
-        gameThread = new Thread(this);
-
         //seekbar setListener
         seekBar = findViewById(R.id.seekbar);
         seekBar.setOnSeekBarChangeListener(this);
