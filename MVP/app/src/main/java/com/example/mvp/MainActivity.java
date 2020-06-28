@@ -2,6 +2,7 @@ package com.example.mvp;
 
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -85,16 +86,16 @@ public class MainActivity extends AppCompatActivity implements SeekBar.OnSeekBar
 
     //미사일 이미지 이동
     @Override
-    public void moveMissile(Missile missile) {
-        ImageView missile_iv = findViewById(missile.getId());
-        missile_iv.setX(missile.getCur_x());
-        missile_iv.setY(missile.getCur_y());
+    public void moveMissile(int missile_id, float cur_x, float cur_y) {
+        ImageView missile_iv = findViewById(missile_id);
+        missile_iv.setX(cur_x);
+        missile_iv.setY(cur_y);
     }
 
     //부모 뷰에서 미사일 이미지 삭제
     @Override
-    public void removeMissile(Missile missile) {
-        ImageView missile_iv = findViewById(missile.getId());
+    public void removeMissile(int missile_id) {
+        ImageView missile_iv = findViewById(missile_id);
         parentView.removeView(missile_iv);
     }
 

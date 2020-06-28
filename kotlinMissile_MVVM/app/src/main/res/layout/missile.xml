@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="missile"
+            type="com.example.kotlinmissile_mvvm.Missile" />
+    </data>
+
+        <ImageView
+            android:id="@+id/missile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/missile"
+            android:translationX="@{missile.curX}"
+            android:translationY="@{missile.curY}"/>
+</layout>

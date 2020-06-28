@@ -7,7 +7,7 @@ android {
     buildToolsVersion "29.0.3"
 
     defaultConfig {
-        applicationId "com.example.kotlinmissile_mvc"
+        applicationId "com.example.kotlinmissile_mvp"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1

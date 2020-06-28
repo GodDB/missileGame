@@ -6,8 +6,14 @@ android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
 
+    apply plugin: 'kotlin-kapt'
+
+    dataBinding {
+        enabled = true
+    }
+
     defaultConfig {
-        applicationId "com.example.kotlinmissile_mvc"
+        applicationId "com.example.kotlinmissile_mvvm"
         minSdkVersion 24
         targetSdkVersion 29
         versionCode 1

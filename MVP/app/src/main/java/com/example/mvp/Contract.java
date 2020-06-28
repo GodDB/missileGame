@@ -10,10 +10,10 @@ public class Contract {
         void setDegree(float degree);
 
         //미사일 이미지 이동
-        void moveMissile(Missile missile);
+        void moveMissile(int missile_id, float cur_x, float cur_y);
 
         //부모 뷰에서 미사일 이미지 삭제
-        void removeMissile(Missile missile);
+        void removeMissile(int missile_id);
     }
 
 

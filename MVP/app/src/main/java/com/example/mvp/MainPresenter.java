@@ -85,11 +85,11 @@ public class MainPresenter implements Contract.IPresenter, Runnable {
                             //미사일 객체 x,y변경
                             missile.move();
                             //view에서 미사일 이미지 이동
-                            view.moveMissile(missile);
+                            view.moveMissile(missile.getId(), missile.getCur_x(), missile.getCur_y());
 
                             //화면에 벗어나면 삭제
                             if(missile.getCur_x() <=0 || missile.getCur_x() >= width || missile.getCur_y() <=0 ){
-                                view.removeMissile(missile);
+                                view.removeMissile(missile.getId());
                                 missileList.remove(i);
                             }
                         } // end for

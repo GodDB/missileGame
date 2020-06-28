@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">kotlinMissile_MVP</string>
+    <string name="fire">발사</string>
+</resources>
